@@ -1,0 +1,52 @@
+{
+  "name": "expofast",
+  "version": "1.0.0",
+  "description": "⚡ Fast, interactive CLI to create React Native Expo projects with TypeScript, NativeWind, Expo Router, Tabs and EAS - Always up to date!",
+  "main": "dist/index.js",
+  "bin": {
+    "expofast": "./dist/index.js",
+    "create-expofast": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node src/index.js",
+    "prepublishOnly": "node build.js"
+  },
+  "keywords": [
+    "react-native",
+    "expo",
+    "expo-router",
+    "typescript",
+    "javascript",
+    "nativewind",
+    "tailwindcss",
+    "eas",
+    "cli",
+    "generator",
+    "template",
+    "tabs-navigation",
+    "fast",
+    "setup"
+  ],
+  "author": "Jean-Christophe",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jeanchristophe-Git/expofast.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jeanchristophe-Git/expofast/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "inquirer": "^8.2.6",
+    "ora": "^5.4.1",
+    "validate-npm-package-name": "^5.0.1"
+  }
+}
