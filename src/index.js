@@ -514,6 +514,21 @@ module.exports = withNativeWind(config, { input: './global.css' });`;
 
     fs.writeFileSync(path.join(projectPath, 'metro.config.js'), metroConfig);
 
+    // Update babel.config.js for NativeWind
+    const babelConfigPath = path.join(projectPath, 'babel.config.js');
+    if (fs.existsSync(babelConfigPath)) {
+      const babelConfig = `module.exports = function (api) {
+  api.cache(true);
+  return {
+    presets: [
+      ["babel-preset-expo", { jsxImportSource: "nativewind" }],
+      "nativewind/babel",
+    ],
+  };
+};`;
+      fs.writeFileSync(babelConfigPath, babelConfig);
+    }
+
     if (useExpoRouter) {
       const layoutPath = path.join(projectPath, 'app', language === 'typescript' ? '_layout.tsx' : '_layout.js');
       if (fs.existsSync(layoutPath)) {
