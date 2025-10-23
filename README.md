@@ -24,13 +24,14 @@ ExpoFast résout un problème majeur : **les CLI existants utilisent des version
 | Fonctionnalité | Description |
 |---------------|-------------|
 | 📦 **Toujours à jour** | Récupère automatiquement les dernières versions depuis NPM |
-| 🎯 **Interactif** | Configuration guidée étape par étape |
+| 🎯 **Interactif** | Configuration guidée étape par étape avec interface ASCII art |
 | ⚡ **Rapide** | Support npm, pnpm et yarn |
 | 🎨 **NativeWind** | Tailwind CSS pour React Native (optionnel) |
 | 🧭 **Expo Router** | Navigation moderne par fichiers |
-| 📱 **Tabs inclus** | Navigation par onglets (contrairement à rn.new !) |
+| 📱 **Tabs inclus** | Navigation par onglets ultra simple (contrairement à rn.new !) |
 | 🚀 **EAS Build** | Configuration cloud build pour iOS/Android |
 | 🔧 **Flexible** | TypeScript ou JavaScript, vous choisissez |
+| 🎨 **Code propre** | Template blank simplifié, sans composants compliqués |
 
 ## 📦 Installation
 
@@ -41,11 +42,15 @@ Aucune installation nécessaire ! Utilisez directement :
 npx expofast
 
 # Avec pnpm
-pnpm create expofast
+pnpx expofast
+# ou
+pnpm dlx expofast
 
 # Avec yarn
-yarn create expofast
+yarn dlx expofast
 ```
+
+> **Note** : `pnpm create expofast` ne fonctionne pas actuellement. Utilisez `pnpx expofast` ou `pnpm dlx expofast` à la place.
 
 ## 🚀 Utilisation
 
@@ -58,19 +63,23 @@ npx expofast
 ### Exemple interactif
 
 ```
-╔═══════════════════════════════════════════════════════════╗
-║            ⚡ ExpoFast - Lightning Fast Setup ⚡         ║
-╚═══════════════════════════════════════════════════════════╝
+ _____ _       _        _______        _
+|  ___| |_ ___| |_ __  |  ___|_ _ ___| |_
+| |__ |  \| _ \  \| __| | |__ / _' / __| __|
+| |__ \_\ |_) / _ \ |   | __||  _|\__ \ |_
+|_____|_|\_|___/\___/\__||_____|\___|_|___/\__|
 
-? Quel est le nom de votre projet ? mon-app
-? Quel gestionnaire de packages ? pnpm
-? TypeScript ou JavaScript ? TypeScript
-? Utiliser Expo Router ? Oui
-? Navigation par Tabs ? Oui
-? Utiliser NativeWind (Tailwind) ? Oui
-? Configurer EAS Build ? Oui
+  ⚡ Lightning-fast Expo setup with latest packages
 
-✨ Projet créé avec succès !
+? What is your project name? mon-app
+? Which package manager? pnpm
+? TypeScript or JavaScript? TypeScript
+? Use Expo Router? Yes
+? Include Tabs navigation? Yes
+? Use NativeWind (Tailwind CSS)? Yes
+? Configure EAS Build? Yes
+
+✨ Your Expo project is ready!
 ```
 
 ### Démarrage du projet
@@ -105,14 +114,32 @@ export default function HomeScreen() {
 mon-app/
 ├── app/
 │   ├── (tabs)/              # Navigation par tabs
-│   │   ├── index.tsx        # Écran d'accueil
-│   │   └── explore.tsx      # Écran explorer
+│   │   ├── index.tsx        # Tab Home (simple & propre)
+│   │   ├── explore.tsx      # Tab Explore
+│   │   └── _layout.tsx      # Layout des tabs
 │   └── _layout.tsx          # Layout racine
-├── components/              # Composants réutilisables
 ├── global.css              # Styles Tailwind (si NativeWind)
 ├── eas.json                # Config EAS (si activé)
 └── package.json
 ```
+
+### 🎨 Code ultra-simple
+
+Contrairement aux autres CLIs, **pas de composants compliqués** ! Juste du React Native pur :
+
+\`\`\`tsx
+import { View, Text, StyleSheet } from 'react-native';
+
+export default function HomeScreen() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Welcome to ExpoFast! 🚀</Text>
+    </View>
+  );
+}
+\`\`\`
+
+Pas de `ParallaxScrollView`, `ThemedText`, ou autres abstractions inutiles. **Juste ce dont vous avez besoin.**
 
 ## 🔧 Configuration disponible
 
