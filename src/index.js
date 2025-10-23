@@ -66,12 +66,20 @@ function detectPackageManager() {
   return 'npm';
 }
 
-async function main() {
-  console.log(chalk.cyan.bold('\n╔═══════════════════════════════════════════════════════════╗'));
-  console.log(chalk.cyan.bold('║            ⚡ ExpoFast - Lightning Fast Setup ⚡         ║'));
-  console.log(chalk.cyan.bold('╚═══════════════════════════════════════════════════════════╝\n'));
+function showBanner() {
+  console.log(chalk.cyan(`
+ _____ _       _        _______        _
+|  ___| |_ ___| |_ __  |  ___|_ _ ___| |_
+| |__ |  \\| _ \\  \\| __| | |__ / _' / __| __|
+| |__ \\_\\ |_) / _ \\ |   | __||  _|\\__ \\ |_
+|_____|_|\\_|___/\\___/\\__||_____|\\__|\\|___/\\__|
 
-  console.log(chalk.gray('Create a modern React Native Expo app with all the tools you need.\n'));
+`));
+  console.log(chalk.white.bold('  ⚡ Lightning-fast Expo setup with latest packages\n'));
+}
+
+async function main() {
+  showBanner();
 
   const detectedPM = detectPackageManager();
 
@@ -95,11 +103,11 @@ async function main() {
     {
       type: 'list',
       name: 'packageManager',
-      message: 'Which package manager do you want to use?',
+      message: 'Which package manager?',
       choices: [
-        { name: 'pnpm (Fast, efficient, saves disk space)', value: 'pnpm' },
-        { name: 'npm (Default, stable, widely used)', value: 'npm' },
-        { name: 'yarn (Fast with good caching)', value: 'yarn' }
+        { name: 'pnpm', value: 'pnpm' },
+        { name: 'npm', value: 'npm' },
+        { name: 'yarn', value: 'yarn' }
       ],
       default: detectedPM
     },
@@ -108,7 +116,7 @@ async function main() {
       name: 'language',
       message: 'TypeScript or JavaScript?',
       choices: [
-        { name: 'TypeScript (Recommended - Type safety & better DX)', value: 'typescript' },
+        { name: 'TypeScript', value: 'typescript' },
         { name: 'JavaScript', value: 'javascript' }
       ],
       default: 'typescript'
@@ -116,7 +124,7 @@ async function main() {
     {
       type: 'confirm',
       name: 'useExpoRouter',
-      message: 'Use Expo Router for navigation?',
+      message: 'Use Expo Router?',
       default: true
     },
     {
@@ -129,25 +137,18 @@ async function main() {
     {
       type: 'confirm',
       name: 'useNativeWind',
-      message: 'Use NativeWind (Tailwind CSS for React Native)?',
+      message: 'Use NativeWind (Tailwind CSS)?',
       default: true
     },
     {
       type: 'confirm',
       name: 'useEAS',
-      message: 'Configure EAS Build & Submit?',
+      message: 'Configure EAS Build?',
       default: true
-    },
-    {
-      type: 'confirm',
-      name: 'useDevClient',
-      message: 'Include Expo Dev Client for custom native code?',
-      default: false,
-      when: (answers) => answers.useEAS
     }
   ]);
 
-  const { projectName, packageManager, language, useExpoRouter, useTabs, useNativeWind, useEAS, useDevClient } = answers;
+  const { projectName, packageManager, language, useExpoRouter, useTabs, useNativeWind, useEAS } = answers;
   const projectPath = path.join(process.cwd(), projectName);
   const pm = PACKAGE_MANAGERS[packageManager];
 
@@ -166,14 +167,10 @@ async function main() {
   console.log(chalk.gray(`  - react-native-reanimated: ${versions.reanimated}`));
   console.log(chalk.gray(`  - react-native-safe-area-context: ${versions.safeArea}\n`));
 
-  // Step 1: Create Expo App
+  // Step 1: Create Expo App (always use blank template)
   let spinner = ora('Creating Expo project...').start();
 
-  const template = (useExpoRouter && useTabs) ? 'tabs@latest' :
-                   useExpoRouter ? 'blank@latest' :
-                   'blank@latest';
-
-  const createCommand = `${pm.create} ${projectName} --template ${template}`;
+  const createCommand = `${pm.create} ${projectName} --template blank`;
 
   if (!execCommand(createCommand, process.cwd(), true)) {
     spinner.fail('Failed to create Expo project');
@@ -182,9 +179,290 @@ async function main() {
 
   spinner.succeed('Expo project created');
 
-  // Step 2: Install NativeWind if requested
+  // Step 2: Setup Expo Router if requested
+  if (useExpoRouter) {
+    spinner = ora('Installing Expo Router...').start();
+
+    const routerPackages = 'expo-router react-native-safe-area-context react-native-screens expo-linking expo-constants expo-status-bar';
+
+    if (!execCommand(`${pm.install} ${routerPackages}`, projectPath, true)) {
+      spinner.warn('Expo Router installation had issues');
+    } else {
+      spinner.succeed('Expo Router installed');
+    }
+
+    // Create app directory structure
+    spinner = ora('Setting up Expo Router structure...').start();
+
+    const appDir = path.join(projectPath, 'app');
+    fs.mkdirSync(appDir, { recursive: true });
+
+    if (useTabs) {
+      // Create (tabs) directory
+      const tabsDir = path.join(appDir, '(tabs)');
+      fs.mkdirSync(tabsDir, { recursive: true });
+
+      // Create index.tsx (Home tab)
+      const homeScreen = language === 'typescript' ? `import { View, Text, StyleSheet } from 'react-native';
+
+export default function HomeScreen() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Welcome to ExpoFast! 🚀</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  text: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+});
+` : `import { View, Text, StyleSheet } from 'react-native';
+
+export default function HomeScreen() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Welcome to ExpoFast! 🚀</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  text: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+});
+`;
+
+      fs.writeFileSync(
+        path.join(tabsDir, language === 'typescript' ? 'index.tsx' : 'index.js'),
+        homeScreen
+      );
+
+      // Create explore.tsx (Explore tab)
+      const exploreScreen = language === 'typescript' ? `import { View, Text, StyleSheet } from 'react-native';
+
+export default function ExploreScreen() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Explore</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  text: {
+    fontSize: 20,
+  },
+});
+` : `import { View, Text, StyleSheet } from 'react-native';
+
+export default function ExploreScreen() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Explore</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  text: {
+    fontSize: 20,
+  },
+});
+`;
+
+      fs.writeFileSync(
+        path.join(tabsDir, language === 'typescript' ? 'explore.tsx' : 'explore.js'),
+        exploreScreen
+      );
+
+      // Create _layout with tabs
+      const tabsLayout = language === 'typescript' ? `import { Tabs } from 'expo-router';
+import { Platform } from 'react-native';
+
+export default function TabLayout() {
+  return (
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: '#007AFF',
+        headerShown: true,
+        tabBarStyle: Platform.select({
+          ios: {
+            position: 'absolute',
+          },
+          default: {},
+        }),
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Home',
+          tabBarIcon: () => null,
+        }}
+      />
+      <Tabs.Screen
+        name="explore"
+        options={{
+          title: 'Explore',
+          tabBarIcon: () => null,
+        }}
+      />
+    </Tabs>
+  );
+}
+` : `import { Tabs } from 'expo-router';
+import { Platform } from 'react-native';
+
+export default function TabLayout() {
+  return (
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: '#007AFF',
+        headerShown: true,
+        tabBarStyle: Platform.select({
+          ios: {
+            position: 'absolute',
+          },
+          default: {},
+        }),
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Home',
+          tabBarIcon: () => null,
+        }}
+      />
+      <Tabs.Screen
+        name="explore"
+        options={{
+          title: 'Explore',
+          tabBarIcon: () => null,
+        }}
+      />
+    </Tabs>
+  );
+}
+`;
+
+      fs.writeFileSync(
+        path.join(tabsDir, language === 'typescript' ? '_layout.tsx' : '_layout.js'),
+        tabsLayout
+      );
+    } else {
+      // Just a simple index without tabs
+      const indexScreen = language === 'typescript' ? `import { View, Text, StyleSheet } from 'react-native';
+
+export default function HomeScreen() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Welcome to ExpoFast! 🚀</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  text: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+});
+` : `import { View, Text, StyleSheet } from 'react-native';
+
+export default function HomeScreen() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Welcome to ExpoFast! 🚀</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  text: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+});
+`;
+
+      fs.writeFileSync(
+        path.join(appDir, language === 'typescript' ? 'index.tsx' : 'index.js'),
+        indexScreen
+      );
+    }
+
+    // Create root _layout
+    const rootLayout = language === 'typescript' ? `import { Stack } from 'expo-router';
+
+export default function RootLayout() {
+  return <Stack />;
+}
+` : `import { Stack } from 'expo-router';
+
+export default function RootLayout() {
+  return <Stack />;
+}
+`;
+
+    fs.writeFileSync(
+      path.join(appDir, language === 'typescript' ? '_layout.tsx' : '_layout.js'),
+      rootLayout
+    );
+
+    // Delete App.js/App.tsx from blank template
+    const appJsPath = path.join(projectPath, 'App.js');
+    const appTsxPath = path.join(projectPath, 'App.tsx');
+    if (fs.existsSync(appJsPath)) fs.unlinkSync(appJsPath);
+    if (fs.existsSync(appTsxPath)) fs.unlinkSync(appTsxPath);
+
+    spinner.succeed('Expo Router structure created');
+  }
+
+  // Step 3: Install NativeWind if requested
   if (useNativeWind) {
-    spinner = ora('Installing NativeWind (Tailwind CSS)...').start();
+    spinner = ora('Installing NativeWind...').start();
 
     const nativewindPackages = `nativewind@${versions.nativewind} react-native-reanimated@${versions.reanimated} react-native-safe-area-context@${versions.safeArea}`;
 
@@ -201,7 +479,6 @@ async function main() {
       spinner.succeed('Tailwind CSS installed');
     }
 
-    // Configure Tailwind
     spinner = ora('Configuring Tailwind CSS...').start();
 
     execCommand('npx tailwindcss init', projectPath, true);
@@ -211,7 +488,6 @@ module.exports = {
   content: [
     "./app/**/*.{js,jsx,ts,tsx}",
     "./components/**/*.{js,jsx,ts,tsx}",
-    "./src/**/*.{js,jsx,ts,tsx}"
   ],
   presets: [require("nativewind/preset")],
   theme: {
@@ -228,7 +504,6 @@ module.exports = {
 
     fs.writeFileSync(path.join(projectPath, 'global.css'), globalCss);
 
-    // Update metro.config.js
     const metroConfig = `const { getDefaultConfig } = require('expo/metro-config');
 const { withNativeWind } = require('nativewind/metro');
 
@@ -238,20 +513,17 @@ module.exports = withNativeWind(config, { input: './global.css' });`;
 
     fs.writeFileSync(path.join(projectPath, 'metro.config.js'), metroConfig);
 
-    // Update layout to import global.css
-    const layoutPath = path.join(projectPath, 'app', '_layout.tsx');
-    const layoutPathJs = path.join(projectPath, 'app', '_layout.js');
-    const actualLayoutPath = fs.existsSync(layoutPath) ? layoutPath : layoutPathJs;
-
-    if (fs.existsSync(actualLayoutPath)) {
-      let layoutContent = fs.readFileSync(actualLayoutPath, 'utf8');
-      if (!layoutContent.includes('global.css')) {
-        layoutContent = `import '../global.css';\n${layoutContent}`;
-        fs.writeFileSync(actualLayoutPath, layoutContent);
+    if (useExpoRouter) {
+      const layoutPath = path.join(projectPath, 'app', language === 'typescript' ? '_layout.tsx' : '_layout.js');
+      if (fs.existsSync(layoutPath)) {
+        let layoutContent = fs.readFileSync(layoutPath, 'utf8');
+        if (!layoutContent.includes('global.css')) {
+          layoutContent = `import '../global.css';\n${layoutContent}`;
+          fs.writeFileSync(layoutPath, layoutContent);
+        }
       }
     }
 
-    // Add TypeScript types for NativeWind
     if (language === 'typescript') {
       const nativewindTypes = `/// <reference types="nativewind/types" />`;
       fs.writeFileSync(path.join(projectPath, 'nativewind-env.d.ts'), nativewindTypes);
@@ -270,7 +542,7 @@ module.exports = withNativeWind(config, { input: './global.css' });`;
     spinner.succeed('Tailwind CSS configured');
   }
 
-  // Step 3: Configure EAS
+  // Step 4: Configure EAS
   if (useEAS) {
     spinner = ora('Configuring EAS Build...').start();
 
@@ -280,7 +552,7 @@ module.exports = withNativeWind(config, { input: './global.css' });`;
       },
       build: {
         development: {
-          developmentClient: useDevClient,
+          developmentClient: true,
           distribution: "internal",
           ios: { resourceClass: "m-medium" },
           android: { buildType: "apk" }
@@ -305,7 +577,7 @@ module.exports = withNativeWind(config, { input: './global.css' });`;
     spinner.succeed('EAS Build configured');
   }
 
-  // Step 4: Update app.json
+  // Step 5: Update app.json
   spinner = ora('Finalizing configuration...').start();
 
   const appJsonPath = path.join(projectPath, 'app.json');
@@ -330,23 +602,61 @@ module.exports = withNativeWind(config, { input: './global.css' });`;
 
   spinner.succeed('Configuration complete');
 
-  // Create enhanced README
-  const readme = generateReadme(answers, versions);
+  // Create README
+  const readme = `# ${projectName}
+
+React Native Expo project created with **ExpoFast** ⚡
+
+## Stack
+
+- **Language**: ${language === 'typescript' ? 'TypeScript' : 'JavaScript'}
+- **Navigation**: ${useExpoRouter ? `Expo Router${useTabs ? ' with Tabs' : ''}` : 'None'}
+- **Styling**: ${useNativeWind ? 'NativeWind (Tailwind CSS)' : 'StyleSheet'}
+- **Build**: ${useEAS ? 'EAS Build' : 'Expo CLI'}
+- **Package Manager**: ${packageManager}
+
+## Get Started
+
+\`\`\`bash
+${packageManager} install
+${packageManager === 'npm' ? 'npm' : packageManager} start
+\`\`\`
+
+${useNativeWind ? `## Styling with NativeWind
+
+\`\`\`tsx
+<View className="flex-1 items-center justify-center">
+  <Text className="text-2xl font-bold">Hello!</Text>
+</View>
+\`\`\`
+` : ''}
+
+${useEAS ? `## Build with EAS
+
+\`\`\`bash
+eas login
+eas build --profile development --platform android
+\`\`\`
+` : ''}
+
+---
+
+Created with [ExpoFast](https://github.com/jeanchristophe-Git/expofast) ⚡
+`;
+
   fs.writeFileSync(path.join(projectPath, 'README.md'), readme);
 
-  // Success message
   console.log(chalk.green.bold('\n✨ Your Expo project is ready!\n'));
 
   console.log(chalk.cyan('📦 Project includes:'));
   console.log(chalk.gray(`  ✓ ${language === 'typescript' ? 'TypeScript' : 'JavaScript'}`));
-  if (useExpoRouter) console.log(chalk.gray(`  ✓ Expo Router${useTabs ? ' with Tabs navigation' : ''}`));
+  if (useExpoRouter) console.log(chalk.gray(`  ✓ Expo Router${useTabs ? ' with Tabs' : ''}`));
   if (useNativeWind) console.log(chalk.gray('  ✓ NativeWind (Tailwind CSS)'));
-  if (useEAS) console.log(chalk.gray('  ✓ EAS Build & Submit'));
-  if (useDevClient) console.log(chalk.gray('  ✓ Expo Dev Client'));
+  if (useEAS) console.log(chalk.gray('  ✓ EAS Build'));
 
   console.log(chalk.yellow('\n🚀 Next steps:\n'));
   console.log(chalk.cyan(`  1. cd ${projectName}`));
-  console.log(chalk.cyan(`  2. ${packageManager} ${packageManager === 'npm' ? 'install' : 'install'}`));
+  console.log(chalk.cyan(`  2. ${packageManager} install`));
   console.log(chalk.cyan(`  3. ${packageManager === 'npm' ? 'npm' : packageManager} start`));
 
   if (useEAS) {
@@ -357,176 +667,6 @@ module.exports = withNativeWind(config, { input: './global.css' });`;
 
   console.log(chalk.gray('\n📖 Check README.md for detailed documentation'));
   console.log(chalk.green('\nHappy coding! 🎉\n'));
-}
-
-function generateReadme(answers, versions) {
-  const { projectName, packageManager, language, useExpoRouter, useTabs, useNativeWind, useEAS, useDevClient } = answers;
-
-  return `# ${projectName}
-
-React Native Expo project created with **ExpoFast** ⚡ - Always up to date! 🚀
-
-## 📦 Stack
-
-- **Language**: ${language === 'typescript' ? 'TypeScript' : 'JavaScript'}
-- **Navigation**: ${useExpoRouter ? `Expo Router${useTabs ? ' with Tabs' : ''}` : 'None'}
-- **Styling**: ${useNativeWind ? 'NativeWind (Tailwind CSS)' : 'StyleSheet'}
-- **Build**: ${useEAS ? 'EAS Build & Submit' : 'Expo CLI'}
-- **Package Manager**: ${packageManager}
-
-## 🚀 Getting Started
-
-### Installation
-
-\`\`\`bash
-${packageManager} install
-\`\`\`
-
-### Development
-
-\`\`\`bash
-# Start development server
-${packageManager === 'npm' ? 'npm' : packageManager} start
-
-# Run on iOS
-${packageManager === 'npm' ? 'npm run' : packageManager} ios
-
-# Run on Android
-${packageManager === 'npm' ? 'npm run' : packageManager} android
-
-# Run on Web
-${packageManager === 'npm' ? 'npm run' : packageManager} web
-\`\`\`
-
-## 📱 Project Structure
-
-\`\`\`
-${projectName}/
-├── app/                # Expo Router pages
-${useTabs ? '│   ├── (tabs)/         # Tab navigation screens' : ''}
-│   └── _layout.${language === 'typescript' ? 'tsx' : 'jsx'}   # Root layout
-├── components/         # Reusable components
-${useNativeWind ? '├── global.css          # Tailwind styles' : ''}
-${useEAS ? '├── eas.json           # EAS Build config' : ''}
-└── app.json           # Expo config
-\`\`\`
-
-${useNativeWind ? `## 🎨 Styling with NativeWind
-
-This project uses NativeWind v${versions.nativewind} (Tailwind CSS for React Native).
-
-\`\`\`${language === 'typescript' ? 'tsx' : 'jsx'}
-import { View, Text } from 'react-native';
-
-export default function Screen() {
-  return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text className="text-2xl font-bold text-blue-600">
-        Hello NativeWind!
-      </Text>
-    </View>
-  );
-}
-\`\`\`
-
-### Useful Tailwind Classes
-
-- Layout: \`flex-1\`, \`flex-row\`, \`items-center\`, \`justify-between\`
-- Spacing: \`p-4\`, \`m-2\`, \`px-6\`, \`gap-4\`
-- Typography: \`text-lg\`, \`font-bold\`, \`text-gray-700\`
-- Colors: \`bg-blue-500\`, \`text-white\`, \`border-gray-200\`
-
-[NativeWind Documentation](https://www.nativewind.dev/)
-` : ''}
-
-${useEAS ? `## 🏗️ Building with EAS
-
-### Setup
-
-\`\`\`bash
-# Install EAS CLI globally
-${packageManager === 'npm' ? 'npm install -g' : packageManager === 'pnpm' ? 'pnpm add -g' : 'yarn global add'} eas-cli
-
-# Login to Expo
-eas login
-
-# Configure project (if needed)
-eas init
-\`\`\`
-
-### Build Profiles
-
-\`\`\`bash
-# Development build (for testing${useDevClient ? ' with custom native code' : ''})
-eas build --profile development --platform android
-eas build --profile development --platform ios
-
-# Preview build (internal distribution)
-eas build --profile preview --platform android
-eas build --profile preview --platform ios
-
-# Production build
-eas build --profile production --platform all
-\`\`\`
-
-### Submit to Stores
-
-\`\`\`bash
-# Submit to Apple App Store
-eas submit --platform ios
-
-# Submit to Google Play Store
-eas submit --platform android
-\`\`\`
-
-### View Builds
-
-\`\`\`bash
-# List all builds
-eas build:list
-
-# View specific build
-eas build:view [build-id]
-\`\`\`
-
-[EAS Build Documentation](https://docs.expo.dev/build/introduction/)
-` : ''}
-
-## 📚 Documentation
-
-- [Expo Documentation](https://docs.expo.dev/)
-${useExpoRouter ? '- [Expo Router](https://docs.expo.dev/router/introduction/)' : ''}
-${useNativeWind ? '- [NativeWind](https://www.nativewind.dev/)' : ''}
-${useEAS ? '- [EAS Build](https://docs.expo.dev/build/introduction/)' : ''}
-
-## 🔧 Useful Commands
-
-\`\`\`bash
-# Clear cache
-${packageManager === 'npm' ? 'npm' : packageManager} start -- --clear
-
-# Type checking (TypeScript)
-${language === 'typescript' ? `${packageManager === 'npm' ? 'npx' : 'pnpm'} tsc --noEmit` : '# Not applicable for JavaScript'}
-
-# Update dependencies
-${packageManager} update
-
-${useEAS ? `# Check EAS credentials
-eas credentials` : ''}
-\`\`\`
-
-## 📦 Installed Versions
-
-${useNativeWind ? `- NativeWind: ${versions.nativewind}
-- Tailwind CSS: ${versions.tailwindcss}
-- React Native Reanimated: ${versions.reanimated}
-- React Native Safe Area Context: ${versions.safeArea}
-` : ''}
-
----
-
-Created with [ExpoFast](https://github.com/yourusername/expofast) ⚡
-`;
 }
 
 main().catch(error => {
