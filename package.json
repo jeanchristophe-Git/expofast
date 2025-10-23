@@ -4,8 +4,8 @@
   "description": "⚡ Fast, interactive CLI to create React Native Expo projects with TypeScript, NativeWind, Expo Router, Tabs and EAS - Always up to date!",
   "main": "dist/index.js",
   "bin": {
-    "expofast": "./dist/index.js",
-    "create-expofast": "./dist/index.js"
+    "expofast": "dist/index.js",
+    "create-expofast": "dist/index.js"
   },
   "files": [
     "dist"
