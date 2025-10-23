@@ -68,14 +68,15 @@ function detectPackageManager() {
 
 function showBanner() {
   console.log(chalk.cyan(`
- _____ _       _        _______        _
-|  ___| |_ ___| |_ __  |  ___|_ _ ___| |_
-| |__ |  \\| _ \\  \\| __| | |__ / _' / __| __|
-| |__ \\_\\ |_) / _ \\ |   | __||  _|\\__ \\ |_
-|_____|_|\\_|___/\\___/\\__||_____|\\__|\\|___/\\__|
-
+  _____                   _____         _   
+ | ____|_  ___ __   ___  |  ___|_ _ ___| |_ 
+ |  _| \ \/ / '_ \ / _ \ | |_ / _' / __| __|
+ | |___ >  <| |_) | (_) ||  _| (_| \__ \ |_ 
+ |_____/_/\_\ .__/ \___/ |_|  \__,_|___/\__|
+           |_|                               
+ok 
 `));
-  console.log(chalk.white.bold('  ⚡ Lightning-fast Expo setup with latest packages\n'));
+  console.log(chalk.yellow.bold('  ⚡ Lightning-fast Expo setup with latest packages\n'));
 }
 
 async function main() {
