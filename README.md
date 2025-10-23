@@ -1,302 +1,188 @@
+<div align="center">
+
 # ⚡ ExpoFast
 
-**Le CLI ultra-rapide et toujours à jour pour créer des projets React Native Expo.**
+**Le CLI ultra-rapide et toujours à jour pour React Native Expo**
 
-Contrairement aux autres CLI, ExpoFast **installe toujours les dernières versions** de tous les packages et vous donne un contrôle total sur la configuration de votre projet grâce à une expérience interactive.
+[![npm version](https://img.shields.io/npm/v/expofast.svg)](https://www.npmjs.com/package/expofast)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+[Installation](#-installation) • [Fonctionnalités](#-fonctionnalités) • [Utilisation](#-utilisation) • [Documentation](#-documentation) • [Contribuer](#-contribuer)
+
+</div>
+
+---
+
+## 🎯 Pourquoi ExpoFast ?
+
+ExpoFast résout un problème majeur : **les CLI existants utilisent des versions obsolètes** et **suppriment des fonctionnalités importantes** (comme la navigation par tabs).
+
+**ExpoFast garantit que vous obtenez toujours les dernières versions** de tous les packages, avec un contrôle total sur votre configuration.
 
 ## ✨ Fonctionnalités
 
-- 🎯 **Configuration interactive** - Répondez à quelques questions et obtenez exactement ce dont vous avez besoin
-- 📦 **Toujours à jour** - Récupère et installe les dernières versions des packages
-- 🔧 **Contrôle total** - Choisissez TypeScript/JavaScript, NativeWind, Expo Router, Tabs, EAS
-- ⚡ **Rapide** - Supporte npm, pnpm et yarn
-- 📱 **Prêt pour la production** - Inclut la configuration EAS Build & Submit
-- 🎨 **Tailwind CSS** - Intégration optionnelle de NativeWind
-- 🧭 **Navigation moderne** - Expo Router avec support des Tabs
+| Fonctionnalité | Description |
+|---------------|-------------|
+| 📦 **Toujours à jour** | Récupère automatiquement les dernières versions depuis NPM |
+| 🎯 **Interactif** | Configuration guidée étape par étape |
+| ⚡ **Rapide** | Support npm, pnpm et yarn |
+| 🎨 **NativeWind** | Tailwind CSS pour React Native (optionnel) |
+| 🧭 **Expo Router** | Navigation moderne par fichiers |
+| 📱 **Tabs inclus** | Navigation par onglets (contrairement à rn.new !) |
+| 🚀 **EAS Build** | Configuration cloud build pour iOS/Android |
+| 🔧 **Flexible** | TypeScript ou JavaScript, vous choisissez |
 
-## 🚀 Démarrage Rapide
+## 📦 Installation
 
-### Avec npx (recommandé)
+Aucune installation nécessaire ! Utilisez directement :
 
-\`\`\`bash
+```bash
+# Avec npx (recommandé)
 npx expofast
-\`\`\`
 
-### Avec pnpm
-
-\`\`\`bash
+# Avec pnpm
 pnpm create expofast
-\`\`\`
 
-### Avec yarn
-
-\`\`\`bash
+# Avec yarn
 yarn create expofast
-\`\`\`
+```
 
-## 🎯 Ce que vous obtenez
+## 🚀 Utilisation
 
-Le CLI vous posera quelques questions et configurera votre projet avec :
+Lancez simplement la commande et répondez aux questions :
 
-1. **Nom du projet** - Le nom de votre application
-2. **Gestionnaire de packages** - npm, pnpm ou yarn
-3. **Langage** - TypeScript ou JavaScript
-4. **Expo Router** - Routing moderne basé sur les fichiers
-5. **Navigation par Tabs** - Navigation par onglets en bas (si Expo Router activé)
-6. **NativeWind** - Tailwind CSS pour React Native
-7. **EAS Build** - Builds cloud pour iOS et Android
-8. **Dev Client** - Build de développement personnalisé pour les modules natifs
+```bash
+npx expofast
+```
 
-## 📦 Exemple d'utilisation
+### Exemple interactif
 
-\`\`\`bash
-$ npx expofast
-
+```
 ╔═══════════════════════════════════════════════════════════╗
 ║            ⚡ ExpoFast - Lightning Fast Setup ⚡         ║
 ╚═══════════════════════════════════════════════════════════╝
 
-? Quel est le nom de votre projet ? my-awesome-app
-? Quel gestionnaire de packages voulez-vous utiliser ? pnpm
+? Quel est le nom de votre projet ? mon-app
+? Quel gestionnaire de packages ? pnpm
 ? TypeScript ou JavaScript ? TypeScript
-? Utiliser Expo Router pour la navigation ? Oui
-? Inclure la navigation par Tabs ? Oui
-? Utiliser NativeWind (Tailwind CSS pour React Native) ? Oui
-? Configurer EAS Build & Submit ? Oui
-? Inclure Expo Dev Client pour le code natif personnalisé ? Non
+? Utiliser Expo Router ? Oui
+? Navigation par Tabs ? Oui
+? Utiliser NativeWind (Tailwind) ? Oui
+? Configurer EAS Build ? Oui
 
-📦 Récupération des dernières versions des packages...
-✓ Projet Expo créé
-✓ NativeWind installé
-✓ Tailwind CSS installé
-✓ Tailwind CSS configuré
-✓ EAS Build configuré
-✓ Configuration terminée
+✨ Projet créé avec succès !
+```
 
-✨ Votre projet Expo est prêt !
+### Démarrage du projet
 
-📦 Le projet inclut :
-  ✓ TypeScript
-  ✓ Expo Router avec navigation par Tabs
-  ✓ NativeWind (Tailwind CSS)
-  ✓ EAS Build & Submit
-
-🚀 Prochaines étapes :
-
-  1. cd my-awesome-app
-  2. pnpm install
-  3. pnpm start
-\`\`\`
+```bash
+cd mon-app
+pnpm install
+pnpm start
+```
 
 ## 🎨 Exemple avec NativeWind
 
-Si vous choisissez NativeWind, vous pouvez utiliser les classes Tailwind CSS directement :
+Si vous activez NativeWind, utilisez Tailwind CSS directement :
 
-\`\`\`tsx
+```tsx
 import { View, Text } from 'react-native';
 
-export default function Screen() {
+export default function HomeScreen() {
   return (
-    <View className="flex-1 items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600">
-      <Text className="text-4xl font-bold text-white mb-4">
-        Bonjour le monde !
-      </Text>
-      <Text className="text-lg text-white/80">
-        Créé avec ExpoFast ⚡
+    <View className="flex-1 items-center justify-center bg-blue-500">
+      <Text className="text-4xl font-bold text-white">
+        Bonjour ExpoFast ! 👋
       </Text>
     </View>
   );
 }
-\`\`\`
+```
 
-## 🏗️ EAS Build
+## 🏗️ Structure du projet généré
 
-Si vous activez EAS, vous obtenez un fichier \`eas.json\` préconfiguré avec trois profils :
+```
+mon-app/
+├── app/
+│   ├── (tabs)/              # Navigation par tabs
+│   │   ├── index.tsx        # Écran d'accueil
+│   │   └── explore.tsx      # Écran explorer
+│   └── _layout.tsx          # Layout racine
+├── components/              # Composants réutilisables
+├── global.css              # Styles Tailwind (si NativeWind)
+├── eas.json                # Config EAS (si activé)
+└── package.json
+```
 
-- **development** - Pour tester avec les outils de dev
-- **preview** - Pour la distribution interne
-- **production** - Pour les stores d'applications
+## 🔧 Configuration disponible
 
-\`\`\`bash
-# Se connecter à Expo
+ExpoFast vous permet de choisir :
+
+- ✅ **Gestionnaire de packages** : npm, pnpm ou yarn
+- ✅ **Langage** : TypeScript ou JavaScript
+- ✅ **Expo Router** : Navigation par fichiers
+- ✅ **Tabs** : Navigation par onglets
+- ✅ **NativeWind** : Tailwind CSS pour React Native
+- ✅ **EAS Build** : Build cloud iOS/Android
+- ✅ **Dev Client** : Build personnalisé avec modules natifs
+
+## 🚀 Build avec EAS
+
+Si vous activez EAS Build, vous pouvez builder pour iOS/Android :
+
+```bash
+# Se connecter
 eas login
 
-# Build pour Android
+# Build de développement
 eas build --profile development --platform android
 
-# Build pour iOS
-eas build --profile development --platform ios
-
-# Build pour la production
+# Build de production
 eas build --profile production --platform all
 
 # Soumettre aux stores
 eas submit --platform ios
-eas submit --platform android
-\`\`\`
+```
 
-## 📱 Structure du projet
+## 📊 Comparaison
 
-\`\`\`
-mon-app/
-├── app/
-│   ├── (tabs)/           # Écrans de navigation par tabs
-│   │   ├── index.tsx     # Tab Accueil
-│   │   └── explore.tsx   # Tab Explorer
-│   └── _layout.tsx       # Layout racine
-├── components/           # Composants réutilisables
-├── global.css           # Styles Tailwind (si NativeWind)
-├── eas.json            # Configuration EAS (si activé)
-├── app.json            # Configuration Expo
-└── package.json
-\`\`\`
-
-## 🔧 Pourquoi ExpoFast ?
-
-### Le problème avec les autres CLI
-
-Beaucoup d'outils de setup React Native :
-- ❌ Utilisent des versions obsolètes des packages
-- ❌ Suppriment des fonctionnalités importantes (comme la navigation par tabs)
-- ❌ Ne vous donnent pas le contrôle sur la configuration
-- ❌ Ont des dépendances dépréciées
-
-### Notre solution
-
-ExpoFast :
-- ✅ **Récupère toujours les dernières versions** depuis npm
-- ✅ **Vous donne le contrôle total** avec des questions interactives
-- ✅ **Conserve les fonctionnalités importantes** comme la navigation par tabs
-- ✅ **Vous montre quelles versions** sont installées
-- ✅ **Fonctionne avec npm, pnpm et yarn**
-
-## 📦 Publier votre propre version
-
-Vous voulez personnaliser ce CLI ? Voici comment :
-
-### 1. Cloner et modifier
-
-\`\`\`bash
-git clone https://github.com/yourusername/expofast.git
-cd expofast
-pnpm install
-\`\`\`
-
-### 2. Tester localement
-
-\`\`\`bash
-# Tester le CLI
-pnpm dev
-
-# Ou le lier globalement
-pnpm link --global
-expofast
-\`\`\`
-
-### 3. Mettre à jour package.json
-
-\`\`\`json
-{
-  "name": "votre-cli-expo-personnalise",
-  "version": "1.0.0",
-  "author": "Votre Nom",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/votreusername/votre-cli-expo-personnalise.git"
-  }
-}
-\`\`\`
-
-### 4. Publier sur NPM
-
-\`\`\`bash
-# Se connecter à npm
-npm login
-
-# Construire le package
-pnpm build
-
-# Publier
-npm publish
-\`\`\`
-
-### 5. Utiliser votre CLI publié
-
-\`\`\`bash
-npx votre-cli-expo-personnalise
-\`\`\`
-
-## 🔄 Garder les packages à jour
-
-Le CLI récupère automatiquement les dernières versions lorsque vous l'exécutez. Pour mettre à jour le CLI lui-même :
-
-\`\`\`bash
-npm update -g expofast
-# ou
-pnpm update -g expofast
-# ou
-yarn global upgrade expofast
-\`\`\`
-
-## 🛠️ Développement
-
-### Structure du projet
-
-\`\`\`
-expofast/
-├── src/
-│   └── index.js         # Code principal du CLI
-├── dist/                # Sortie compilée
-├── build.js            # Script de build
-├── package.json
-└── README.md
-\`\`\`
-
-### Build
-
-\`\`\`bash
-pnpm build
-\`\`\`
-
-### Test
-
-\`\`\`bash
-pnpm dev
-\`\`\`
-
-## 📝 Options de configuration
-
-Le CLI supporte ces options interactives :
-
-| Option | Valeurs | Par défaut | Description |
-|--------|---------|-----------|-------------|
-| Nom du projet | string | my-expo-app | Le nom de votre app |
-| Gestionnaire de packages | npm, pnpm, yarn | auto-détecté | Quel gestionnaire utiliser |
-| Langage | TypeScript, JavaScript | TypeScript | Langage du projet |
-| Expo Router | Oui, Non | Oui | Routing basé sur les fichiers |
-| Navigation Tabs | Oui, Non | Oui | Navigation par onglets en bas |
-| NativeWind | Oui, Non | Oui | Intégration Tailwind CSS |
-| EAS Build | Oui, Non | Oui | Configuration build cloud |
-| Dev Client | Oui, Non | Non | Build de développement personnalisé |
+| Fonctionnalité | ExpoFast | Autres CLI |
+|---------------|----------|------------|
+| Dernières versions | ✅ Toujours | ❌ Versions fixes |
+| Navigation Tabs | ✅ Inclus | ❌ Supprimé |
+| NativeWind | ✅ Optionnel | ❌ Non |
+| Configuration interactive | ✅ Complète | ⚠️ Limitée |
+| EAS Build | ✅ Configuré | ⚠️ Manuel |
+| Multi package managers | ✅ npm/pnpm/yarn | ⚠️ npm seulement |
 
 ## 🤝 Contribuer
 
-Les contributions sont les bienvenues ! N'hésitez pas à :
+Les contributions sont les bienvenues !
 
-1. Fork le dépôt
-2. Créer une branche de fonctionnalité
-3. Faire vos modifications
-4. Soumettre une pull request
+1. Fork le projet
+2. Créez votre branche (`git checkout -b feature/super-feature`)
+3. Committez vos changements (`git commit -m 'feat: ajout super feature'`)
+4. Push vers la branche (`git push origin feature/super-feature`)
+5. Ouvrez une Pull Request
 
-## 📄 Licence
+Voir [CONTRIBUTING.md](CONTRIBUTING.md) pour plus de détails.
 
-Licence MIT - voir le fichier LICENSE pour les détails
+## 📝 Idées de contributions
 
-## 🌟 Crédits
+- [ ] Templates prédéfinis (E-commerce, Social, etc.)
+- [ ] State management (Zustand, Redux)
+- [ ] Authentication (Clerk, Supabase)
+- [ ] Firebase/Supabase setup
+- [ ] Internationalisation (i18n)
+- [ ] ESLint/Prettier config
 
-Créé parce que [rn.new](https://rn.new) a supprimé la navigation par tabs et d'autres fonctionnalités importantes.
+## 📚 Documentation
 
-## 📚 Ressources
+- [Guide de publication NPM](GUIDE-PUBLICATION.md)
+- [Checklist finale](CHECKLIST-FINALE.md)
+- [Comment contribuer](CONTRIBUTING.md)
+
+## 🔗 Ressources
 
 - [Documentation Expo](https://docs.expo.dev/)
 - [Expo Router](https://docs.expo.dev/router/introduction/)
@@ -304,8 +190,32 @@ Créé parce que [rn.new](https://rn.new) a supprimé la navigation par tabs et 
 - [EAS Build](https://docs.expo.dev/build/introduction/)
 - [React Native](https://reactnative.dev/)
 
+## 📄 Licence
+
+MIT © [Jean-Christophe](https://github.com/jeanchristophe-Git)
+
+## 🌟 Support
+
+Si vous aimez ExpoFast, donnez une ⭐️ sur [GitHub](https://github.com/jeanchristophe-Git/expofast) !
+
+### Signaler un bug
+
+Ouvrez une [issue](https://github.com/jeanchristophe-Git/expofast/issues) avec :
+- Description du problème
+- Étapes pour reproduire
+- Version de Node/npm
+- Système d'exploitation
+
+### Proposer une fonctionnalité
+
+Ouvrez une [issue](https://github.com/jeanchristophe-Git/expofast/issues) avec le label `enhancement`.
+
 ---
+
+<div align="center">
 
 **Fait avec ❤️ pour la communauté React Native**
 
-Des questions ? Ouvrez une issue sur [GitHub](https://github.com/yourusername/expofast/issues)
+[GitHub](https://github.com/jeanchristophe-Git/expofast) • [NPM](https://www.npmjs.com/package/expofast) • [Issues](https://github.com/jeanchristophe-Git/expofast/issues)
+
+</div>
