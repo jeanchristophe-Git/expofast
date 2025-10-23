@@ -157,7 +157,7 @@ async function main() {
 
   const versions = {
     nativewind: getLatestVersion('nativewind'),
-    tailwindcss: getLatestVersion('tailwindcss'),
+    tailwindcss: '3.4.17', // Fixed to v3 for NativeWind compatibility
     reanimated: getLatestVersion('react-native-reanimated'),
     safeArea: getLatestVersion('react-native-safe-area-context')
   };
@@ -179,6 +179,24 @@ async function main() {
   }
 
   spinner.succeed('Expo project created');
+
+  // Step 1.5: Create tsconfig.json for TypeScript
+  if (language === 'typescript') {
+    const tsconfigPath = path.join(projectPath, 'tsconfig.json');
+    if (!fs.existsSync(tsconfigPath)) {
+      const tsconfig = {
+        "extends": "expo/tsconfig.base",
+        "compilerOptions": {
+          "strict": true,
+          "paths": {
+            "@/*": ["./*"]
+          }
+        },
+        "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+      };
+      fs.writeFileSync(tsconfigPath, JSON.stringify(tsconfig, null, 2));
+    }
+  }
 
   // Step 2: Setup Expo Router if requested
   if (useExpoRouter) {
