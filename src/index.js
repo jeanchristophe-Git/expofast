@@ -318,10 +318,6 @@ module.exports = withNativeWind(config, { input: './global.css' });`;
       appJson.expo.plugins.push('expo-router');
     }
 
-    if (useNativeWind && !appJson.expo.plugins.includes('nativewind/metro')) {
-      appJson.expo.plugins.push('nativewind/metro');
-    }
-
     appJson.expo.web = appJson.expo.web || {};
     appJson.expo.web.bundler = 'metro';
 
