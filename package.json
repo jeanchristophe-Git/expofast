@@ -1,6 +1,6 @@
 {
   "name": "expofast",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "⚡ Fast, interactive CLI to create React Native Expo projects with TypeScript, NativeWind, Expo Router, Tabs and EAS - Always up to date!",
   "main": "dist/index.js",
   "bin": {
